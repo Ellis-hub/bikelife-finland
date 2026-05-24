@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bikelife Finland - Roblox Edition</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for Roblox-like blocky and playful style -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lexend+Deca:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Lexend Deca', sans-serif;
+      background-color: #0c0f17;
+      overflow-x: hidden;
+      user-select: none;
+    }
+    .roblox-font {
+      font-family: 'Fredoka One', cursive;
+    }
+    /* Roblox custom scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 3px;
+    }
+    /* Keyframes for wheelie pulse */
+    @keyframes wheelie-glow {
+      0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.8); }
+    }
+    .wheelie-active {
+      animation: wheelie-glow 0.8s infinite;
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between">
+
+  <!-- ROBLOX TOP BAR -->
+  <header class="bg-[#1b1d22] border-b-2 border-[#2b2e36] px-4 py-2 flex items-center justify-between shadow-md z-30">
+    <div class="flex items-center gap-4">
+      <!-- Silver Roblox logo icon mimicking -->
+      <div class="w-8 h-8 bg-gradient-to-br from-slate-200 to-slate-400 rotate-12 flex items-center justify-center border-2 border-slate-600 rounded shadow">
+        <span class="text-slate-900 font-black text-lg select-none">R</span>
+      </div>
+      <div>
+        <h1 class="text-md font-black roblox-font tracking-wide text-white">BIKELIFE FINLAND [UPDATE 2.6]</h1>
+        <div class="flex items-center gap-2 text-[10px] text-emerald-400 font-bold">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>ONLINE - SERVU #1 (TÄYNNÄ 15/16)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Panel -->
+    <div class="flex items-center gap-4">
+      <div class="bg-[#121417] px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
+        <span class="text-amber-400 text-xs font-bold uppercase tracking-wider">RAHA (B$):</span>
+        <span id="cash-display" class="font-extrabold text-white text-sm">B$ 150</span>
+      </div>
+      <div class="bg-[#121417] px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
+        <span class="text-emerald-400 text-xs font-bold uppercase tracking-wider">KEULINTA-REKORDI:</span>
+        <span id="record-display" class="font-extrabold text-white text-sm">0s</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT GRID -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
+    
+    <!-- LEFT COLUMN: ROBLOX CHAT & PLAYERS LIST (3 cols) -->
+    <section class="lg:col-span-3 flex flex-col gap-4 order-2 lg:order-1">
+      
+      <!-- ROBLOX GAME CHAT -->
+      <div class="bg-[#1b1d22]/95 border-2 border-[#2b2e36] rounded-2xl p-4 flex flex-col h-[280px] shadow-lg">
+        <div class="border-b border-slate-700/50 pb-2 mb-2 flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+            💬 Palvelinchatti
+          </span>
+          <span class="text-[9px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-bold">SPAM SUODATIN</span>
+        </div>
+        
+        <!-- Chat message log container -->
+        <div id="chat-log" class="flex-grow overflow-y-auto space-y-2 text-xs pr-1">
+          <!-- Chat messages populated dynamically -->
+        </div>
+
+        <!-- Custom chat input simulation -->
+        <form id="chat-form" class="mt-2 flex gap-1">
+          <input 
+            type="text" 
+            id="chat-input" 
+            placeholder="Kirjoita chattiin..." 
+            class="flex-1 bg-[#121417] border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none placeholder:text-slate-500 focus:border-emerald-500"
+          />
+          <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 rounded-lg text-xs active:scale-95 transition-transform">
+            Lähetä
+          </button>
+        </form>
+      </div>
+
+      <!-- PLAYERS LEADERBOARD -->
+      <div class="bg-[#1b1d22]/95 border-2 border-[#2b2e36] rounded-2xl p-4 flex-grow shadow-lg">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700/50 pb-2 mb-3">
+          🏆 Miittiläiset (Leaderboard)
+        </h3>
+        <div class="space-y-2 max-h-[160px] overflow-y-auto">
+          <!-- Top Players List -->
+          <div class="flex items-center justify-between text-xs bg-[#121417] p-2 rounded-lg border border-slate-800">
+            <span class="font-bold text-amber-400 flex items-center gap-1.5">
+              <span>👑</span> JonnePro_99
+            </span>
+            <span class="font-extrabold text-white">92.4s keulinta</span>
+          </div>
+          <div class="flex items-center justify-between text-xs bg-[#1b1d22] p-2 rounded-lg border border-slate-800/50">
+            <span class="font-bold text-slate-300">🎮 Minä (Mopojonne)</span>
+            <span id="player-personal-record" class="font-extrabold text-amber-400">0s keulinta</span>
+          </div>
+          <div class="flex items-center justify-between text-xs bg-[#121417] p-2 rounded-lg border border-slate-800">
+            <span class="text-slate-400">❌ ES_PärinäX</span>
+            <span class="text-slate-500">12.5s keulinta</span>
+          </div>
+          <div class="flex items-center justify-between text-xs bg-[#121417] p-2 rounded-lg border border-slate-800">
+            <span class="text-slate-400">🔧 PV_Tuning_Master</span>
+            <span class="text-slate-500">8.2s keulinta</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CENTER COLUMN: RIDING CANVAS & GAMEPLAY (6 cols) -->
+    <section class="lg:col-span-6 flex flex-col gap-4 order-1 lg:order-2">
+      
+      <!-- GAMEPLAY SCREEN -->
+      <div class="bg-[#121417] border-2 border-[#2b2e36] rounded-3xl overflow-hidden shadow-2xl relative flex flex-col items-center">
+        
+        <!-- Game HUD Overlay -->
+        <div class="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none z-10">
+          <!-- Keulinta Timer display -->
+          <div id="wheelie-banner" class="bg-amber-500 text-slate-950 px-4 py-2 rounded-2xl font-black text-xs roblox-font flex items-center gap-2 shadow-lg scale-0 transition-transform duration-200">
+            <span>🔥 KEULITAAN:</span>
+            <span id="wheelie-timer" class="text-lg">0.0s</span>
+          </div>
+
+          <!-- Police/Kyttä Alert -->
+          <div id="cop-alert" class="bg-red-600 text-white px-4 py-2 rounded-2xl font-black text-xs roblox-font flex items-center gap-2 shadow-lg animate-pulse scale-0 transition-transform duration-200">
+            <span>🚨 KYTÄT PERÄSSÄ! PAETAAN!</span>
+          </div>
+        </div>
+
+        <!-- Instructions Overlay inside Canvas start -->
+        <div id="start-overlay" class="absolute inset-0 bg-[#0c0f17]/90 flex flex-col items-center justify-center p-6 text-center z-20 transition-opacity">
+          <div class="w-16 h-16 bg-amber-400 rounded-full flex items-center justify-center text-slate-950 mb-4 animate-bounce">
+            <span class="text-3xl font-bold">🏍️</span>
+          </div>
+          <h2 class="text-2xl font-extrabold roblox-font text-white mb-2 uppercase">Bikelife Keulintapeli</h2>
+          <p class="text-slate-400 text-xs max-w-sm mb-6 leading-relaxed">
+            Keuli tiesi suomalaisen lähiön kuninkaaksi! Väistele esteitä, älä vedä ympäri, ja pakene poliisimaijaa kerätäksesi mainetta ja kahisevaa.
+          </p>
+          <div class="bg-[#1b1d22] p-4 rounded-xl border border-slate-700/50 mb-6 text-left w-full max-w-xs space-y-2">
+            <p class="text-[11px] font-bold text-slate-300 uppercase tracking-widest text-center border-b border-slate-700 pb-1.5">Ohjaus:</p>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-400">Nosta keulaa / Keuli:</span>
+              <kbd class="bg-slate-800 px-1.5 rounded text-amber-400 font-bold border-b border-slate-900">Nuoli Vasen / A</kbd>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-400">Paina keula alas:</span>
+              <kbd class="bg-slate-800 px-1.5 rounded text-amber-400 font-bold border-b border-slate-900">Nuoli Oikea / D</kbd>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-400">Kaasu / Vauhti:</span>
+              <kbd class="bg-slate-800 px-1.5 rounded text-amber-400 font-bold border-b border-slate-900">Nuoli Ylös / W</kbd>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-400">Jarru:</span>
+              <kbd class="bg-slate-800 px-1.5 rounded text-amber-400 font-bold border-b border-slate-900">Nuoli Alas / S</kbd>
+            </div>
+          </div>
+          <button 
+            id="start-btn" 
+            class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 px-8 rounded-2xl shadow-xl active:scale-95 transition-all roblox-font tracking-wide">
+            KÄYNNISTÄ MOOTTORI! 💨
+          </button>
+        </div>
+
+        <!-- CANVAS -->
+        <canvas id="gameCanvas" width="560" height="320" class="w-full bg-slate-950 block"></canvas>
+
+        <!-- SOUNDS CONTROLLER -->
+        <div class="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur border border-slate-700 p-2 rounded-xl flex items-center gap-3 z-10">
+          <span class="text-[10px] font-bold text-slate-400">ÄÄNET:</span>
+          <button id="sound-toggle" class="bg-emerald-800 hover:bg-emerald-700 text-white text-[10px] font-black px-2.5 py-1 rounded-md">
+            PÄÄLLÄ🔊
+          </button>
+        </div>
+
+        <!-- MOBILE TOUCH CONTROLS (Displayed only on touch devices/responsive) -->
+        <div class="w-full bg-[#1b1d22] border-t border-slate-800 p-4 grid grid-cols-4 gap-2 lg:hidden">
+          <button id="btn-lean-back" class="bg-amber-500 active:bg-amber-400 text-slate-950 font-black py-4 px-2 rounded-xl text-xs active:scale-95 transition-all select-none">
+            KEULI (Lean L)
+          </button>
+          <button id="btn-lean-forward" class="bg-slate-700 active:bg-slate-600 text-white font-black py-4 px-2 rounded-xl text-xs active:scale-95 transition-all select-none">
+            ALAS (Lean R)
+          </button>
+          <button id="btn-gas" class="bg-emerald-600 active:bg-emerald-500 text-white font-black py-4 px-2 rounded-xl text-xs active:scale-95 transition-all select-none">
+            KAASU (Gas)
+          </button>
+          <button id="btn-brake" class="bg-red-600 active:bg-red-500 text-white font-black py-4 px-2 rounded-xl text-xs active:scale-95 transition-all select-none">
+            JARRU (Brake)
+          </button>
+        </div>
+      </div>
+
+      <!-- CRASH WARNING / MESSAGE BOX -->
+      <div id="crash-box" class="bg-red-950/40 border border-red-800 text-red-200 p-3 rounded-2xl text-xs text-center hidden">
+        💥 <span class="font-extrabold text-red-400 uppercase">VOI EI! Menit ympäri eli lipat!</span> Mopo sai pientä osumaa. Yritä pitää keula paremmin hallinnassa! 💥
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: GARAGE & TUNING (3 cols) -->
+    <section class="lg:col-span-3 flex flex-col gap-4 order-3">
+      
+      <!-- BIKE SELECTOR -->
+      <div class="bg-[#1b1d22]/95 border-2 border-[#2b2e36] rounded-2xl p-4 shadow-lg">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700/50 pb-2 mb-3">
+          🚲 Valitse Kulkupeli
+        </h3>
+        <div class="space-y-2.5">
+          <!-- Bicycle (Mankeli) -->
+          <button id="select-mankeli" class="w-full text-left p-2.5 rounded-xl border border-emerald-600 bg-emerald-950/20 text-xs flex items-center justify-between transition-all">
+            <div class="space-y-0.5">
+              <p class="font-bold text-white">Mankeli Jopo 24"</p>
+              <p class="text-[10px] text-slate-400">Teho: 1/5 | Vakaus: Erinomainen</p>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-400 uppercase">Valittu</span>
+          </button>
+
+          <!-- Honda Monkey -->
+          <button id="select-manki" class="w-full text-left p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 text-xs flex items-center justify-between transition-all opacity-50">
+            <div class="space-y-0.5">
+              <p class="font-bold text-slate-200">Honda Manki 50cc</p>
+              <p class="text-[10px] text-slate-400">Teho: 3/5 | Vakaus: Keskivaativa</p>
+            </div>
+            <span id="price-manki" class="text-[10px] font-black text-amber-400">B$ 250</span>
+          </button>
+
+          <!-- Suzuki PV -->
+          <button id="select-pv" class="w-full text-left p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 text-xs flex items-center justify-between transition-all opacity-50">
+            <div class="space-y-0.5">
+              <p class="font-bold text-slate-200">Suzuki PV 80cc</p>
+              <p class="text-[10px] text-slate-400">Teho: 4/5 | Vakaus: Todella peli</p>
+            </div>
+            <span id="price-pv" class="text-[10px] font-black text-amber-400">B$ 500</span>
+          </button>
+
+          <!-- KTM EXC -->
+          <button id="select-ktm" class="w-full text-left p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 text-xs flex items-center justify-between transition-all opacity-50">
+            <div class="space-y-0.5">
+              <p class="font-bold text-slate-200">KTM EXC 125cc (2T)</p>
+              <p class="text-[10px] text-slate-400">Teho: 5/5 | Vakaus: Hurja teho</p>
+            </div>
+            <span id="price-ktm" class="text-[10px] font-black text-amber-400">B$ 1200</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TUNING SHOP -->
+      <div class="bg-[#1b1d22]/95 border-2 border-[#2b2e36] rounded-2xl p-4 shadow-lg flex-grow">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700/50 pb-2 mb-3">
+          🔧 Jonne-viritys (Tuning Shop)
+        </h3>
+        <div class="space-y-3">
+          <!-- Tuning 1: Exhaust -->
+          <div class="p-2.5 bg-[#121417] rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-white">Tehoputki (Tehari)</p>
+              <p class="text-[9px] text-slate-500">+15% lisää kiihtyvyyttä</p>
+            </div>
+            <button id="buy-exhaust" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-2.5 py-1.5 rounded-lg text-[10px] active:scale-95 transition-transform shrink-0">
+              B$ 80
+            </button>
+          </div>
+
+          <!-- Tuning 2: Wheelie bar -->
+          <div class="p-2.5 bg-[#121417] rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-white">Keulintarauta (Rauta)</p>
+              <p class="text-[9px] text-slate-500">Estää pyörähtämästä ympäri helposti</p>
+            </div>
+            <button id="buy-bar" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-2.5 py-1.5 rounded-lg text-[10px] active:scale-95 transition-transform shrink-0">
+              B$ 120
+            </button>
+          </div>
+
+          <!-- Tuning 3: Engine kit -->
+          <div class="p-2.5 bg-[#121417] rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-white">70cc Viilattu Pytty</p>
+              <p class="text-[9px] text-slate-500">Mopon tehot nousuun kunnolla!</p>
+            </div>
+            <button id="buy-engine" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-2.5 py-1.5 rounded-lg text-[10px] active:scale-95 transition-transform shrink-0">
+              B$ 200
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM STATUS FOOTER -->
+  <footer class="bg-[#1b1d22] border-t border-[#2b2e36] py-3 text-center text-[11px] text-slate-500 z-10">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+      <p>⚠️ Peliä pelataan Roblox-hengessä! Älä kokeile näitä temppuja ja keulintaa ilman varusteita ja luvallisilla alueilla oikeassa elämässä. ⚠️</p>
+      <p class="text-amber-400 font-bold">Bikelife Finland ryhmä Robloxissa - © 2026</p>
+    </div>
+  </footer>
+
+  <!-- CORE GAMEPLAY PHYSICS AND INTERACTIVITY LOGIC -->
+  <script>
+    // --- STATE MANAGEMENT ---
+    let cash = 150;
+    let personalRecord = 0.0;
+    let currentWheelieTime = 0.0;
+    let isWheelieActive = false;
+    let crashActiveTimer = 0;
+    
+    // Bike specs
+    const BIKES = {
+      mankeli: { name: "Mankeli Jopo", type: "bicycle", purchased: true, weight: 1.0, power: 1.2, stability: 1.5, baseColor: "#38bdf8", price: 0 },
+      manki: { name: "Honda Manki", type: "moped", purchased: false, weight: 1.5, power: 2.2, stability: 1.1, baseColor: "#f43f5e", price: 250 },
+      pv: { name: "Suzuki PV", type: "moped", purchased: false, weight: 1.4, power: 3.0, stability: 0.9, baseColor: "#eab308", price: 500 },
+      ktm: { name: "KTM EXC", type: "moped", purchased: false, weight: 1.8, power: 4.5, stability: 1.3, baseColor: "#f97316", price: 1200 }
+    };
+    let activeBikeKey = 'mankeli';
+
+    // Upgrades state
+    let upgrades = {
+      exhaust: false,
+      bar: false,
+      engine: false
+    };
+
+    // Game Running state
+    let gameStarted = false;
+    let soundEnabled = true;
+
+    // --- SOUND ENGINE (Web Audio API) ---
+    let audioCtx = null;
+    let engineOsc = null;
+    let engineGain = null;
+
+    function initAudio() {
+      if (!soundEnabled) return;
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Setup moped continuous engine hum
+        engineOsc = audioCtx.createOscillator();
+        engineGain = audioCtx.createGain();
+        
+        engineOsc.type = 'sawtooth';
+        engineOsc.frequency.setValueAtTime(35, audioCtx.currentTime); // low rumble
+        
+        engineGain.gain.setValueAtTime(0.01, audioCtx.currentTime); // quiet by default
+        
+        engineOsc.connect(engineGain);
+        engineGain.connect(audioCtx.destination);
+        engineOsc.start();
+      } catch (e) {
+        console.log("Audio not supported or interaction needed.", e);
+      }
+    }
+
+    function setEnginePitch(rpmFactor, vol) {
+      if (!audioCtx || !engineOsc || !soundEnabled) return;
+      // Synthesize moped engine sound frequency response
+      const baseFreq = activeBikeKey === 'mankeli' ? 20 : 40; // Mankeli is much quieter hum
+      const targetFreq = baseFreq + (rpmFactor * 120);
+      
+      engineOsc.frequency.setTargetAtTime(targetFreq, audioCtx.currentTime, 0.1);
+      engineGain.gain.setTargetAtTime(vol * (activeBikeKey === 'mankeli' ? 0.05 : 0.15), audioCtx.currentTime, 0.15);
+    }
+
+    function playBeep(freq, duration) {
+      if (!audioCtx || !soundEnabled) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e){}
+    }
+
+    // --- CANVAS CONFIGS & LOOP ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Handle high DPI display sizing
+    function resizeCanvas() {
+      const parentWidth = canvas.parentElement.clientWidth;
+      canvas.style.width = parentWidth + 'px';
+      // keep 16:9 aspect roughly
+      canvas.style.height = (parentWidth * 0.57) + 'px';
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Key handlers
+    const keys = {};
+    window.addEventListener('keydown', (e) => {
+      keys[e.key] = true;
+      keys[e.key.toLowerCase()] = true;
+      // Prevent scrolling with arrows/space
+      if(["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+      }
+    });
+    window.addEventListener('keyup', (e) => {
+      keys[e.key] = false;
+      keys[e.key.toLowerCase()] = false;
+    });
+
+    // Touch handlers for mobile buttons
+    const activeTouches = { gas: false, brake: false, leanL: false, leanR: false };
+    setupTouchBtn('btn-gas', 'gas');
+    setupTouchBtn('btn-brake', 'brake');
+    setupTouchBtn('btn-lean-back', 'leanL');
+    setupTouchBtn('btn-lean-forward', 'leanR');
+
+    function setupTouchBtn(btnId, actionKey) {
+      const btn = document.getElementById(btnId);
+      if(!btn) return;
+      
+      const startHandler = (e) => {
+        e.preventDefault();
+        activeTouches[actionKey] = true;
+        btn.classList.add('scale-95', 'brightness-90');
+      };
+      const endHandler = (e) => {
+        e.preventDefault();
+        activeTouches[actionKey] = false;
+        btn.classList.remove('scale-95', 'brightness-90');
+      };
+
+      btn.addEventListener('touchstart', startHandler);
+      btn.addEventListener('touchend', endHandler);
+      btn.addEventListener('mousedown', startHandler);
+      btn.addEventListener('mouseup', endHandler);
+      btn.addEventListener('mouseleave', endHandler);
+    }
+
+    // Physics constants
+    const GRAVITY = 0.25;
+    
+    // Bike Dynamic Object
+    const rider = {
+      x: 120,
+      y: 240, // Ground level Y is roughly 240
+      vx: 0,
+      vy: 0,
+      angle: 0, // In degrees. 0 = flat ground. Positive = wheelie leaning backward.
+      angularVelocity: 0,
+      targetSpeed: 0,
+      actualSpeed: 0,
+      stiffness: 0.1,
+      mass: 1.0,
+      wheelieTimerStart: 0,
+      isLanded: true
+    };
+
+    // Environmental offsets
+    let backgroundOffset = 0;
+    let groundOffset = 0;
+    let obstacles = [];
+    let policeActive = false;
+    let policeX = -150; // comes from behind!
+    let scoreMultiplier = 1;
+
+    // Spawn obstacles periodically
+    function spawnObstacle() {
+      if (!gameStarted) return;
+      // Avoid spawning too close together
+      const lastObstacle = obstacles[obstacles.length - 1];
+      if (lastObstacle && (canvas.width - lastObstacle.x) < 300) return;
+
+      const types = ['pothole', 'bump', 'traffic_cone', 'speed_camera'];
+      const chosenType = types[Math.floor(Math.random() * types.length)];
+      
+      obstacles.push({
+        x: canvas.width + 50,
+        y: 250,
+        type: chosenType,
+        passed: false,
+        width: chosenType === 'pothole' ? 40 : chosenType === 'speed_camera' ? 25 : 20,
+        height: chosenType === 'speed_camera' ? 45 : 15
+      });
+    }
+
+    // --- GAME ENGINE LOOP ---
+    function updateGame() {
+      if (!gameStarted) return;
+
+      const bike = BIKES[activeBikeKey];
+      
+      // Determine user input from physical keys or touch controls
+      const pressGas = keys['ArrowUp'] || keys['w'] || activeTouches.gas;
+      const pressBrake = keys['ArrowDown'] || keys['s'] || activeTouches.brake;
+      const pressLeanL = keys['ArrowLeft'] || keys['a'] || activeTouches.leanL;
+      const pressLeanR = keys['ArrowRight'] || keys['d'] || activeTouches.leanR;
+
+      // Handle Acceleration & Engine Pitch
+      let powerMultiplier = bike.power;
+      if (upgrades.exhaust) powerMultiplier *= 1.15;
+      if (upgrades.engine) powerMultiplier *= 1.35;
+
+      if (pressGas) {
+        rider.targetSpeed = 6 * powerMultiplier;
+        // Gas gives natural backward torque when accelerating
+        if (rider.angle >= 0 && rider.angle < 60) {
+          rider.angularVelocity += 0.12 * (powerMultiplier / bike.weight);
+        }
+      } else if (pressBrake) {
+        rider.targetSpeed = 0;
+        // Brake gives forward torque
+        rider.angularVelocity -= 0.25;
+      } else {
+        rider.targetSpeed = 1.0; // roll naturally slow
+      }
+
+      // Smooth velocity interpolation
+      rider.actualSpeed += (rider.targetSpeed - rider.actualSpeed) * 0.08;
+      
+      // Dynamic engine hum based on throttle
+      if (rider.actualSpeed > 0.5) {
+        setEnginePitch(rider.actualSpeed / 10, 0.4);
+      } else {
+        setEnginePitch(0.1, 0.08); // idling sound
+      }
+
+      // Background tracking movement
+      backgroundOffset -= (rider.actualSpeed * 0.3);
+      groundOffset -= rider.actualSpeed;
+
+      // Leaning Wheelie Mechanics (Angles in degrees)
+      if (pressLeanL) { // Lean Backwards
+        rider.angularVelocity += 0.22 / bike.weight;
+      }
+      if (pressLeanR) { // Push Downwards
+        rider.angularVelocity -= 0.28;
+      }
+
+      // Apply wheelie physics / gravity to angle
+      // Gravity naturally pulls the front down if the angle isn't sustained
+      if (rider.angle > 0) {
+        const gravityEffect = 0.18 * Math.cos((rider.angle * Math.PI) / 180) * bike.weight;
+        rider.angularVelocity -= gravityEffect;
+      }
+
+      // Update angle with dampening friction
+      rider.angle += rider.angularVelocity;
+      rider.angularVelocity *= 0.90; // high resistance to prevent insane spinning
+
+      // Ground constraint: Angle cannot go below 0 (wheels on ground)
+      if (rider.angle < 0) {
+        rider.angle = 0;
+        rider.angularVelocity = 0;
+      }
+
+      // Loop Out Condition (Crashing backwards)
+      let maxSafeAngle = upgrades.bar ? 92 : 82; // Keulintarauta lets you lean crazy back safely
+      
+      if (rider.angle > maxSafeAngle) {
+        // CRASH! Loop out "ympäri"
+        handleCrash();
+      }
+
+      // Wheelie Scoring Logic
+      if (rider.angle > 12 && rider.angle <= maxSafeAngle) {
+        if (!isWheelieActive) {
+          isWheelieActive = true;
+          rider.wheelieTimerStart = Date.now();
+          document.getElementById('wheelie-banner').classList.remove('scale-0');
+          document.getElementById('wheelie-banner').classList.add('scale-100', 'wheelie-active');
+          playBeep(600, 0.15);
+        } else {
+          // Calculate time in seconds
+          currentWheelieTime = ((Date.now() - rider.wheelieTimerStart) / 1000).toFixed(1);
+          document.getElementById('wheelie-timer').textContent = currentWheelieTime + 's';
+          
+          // Earn cash continuously when keeping front wheel up
+          if (Math.random() < 0.2) {
+            let gain = Math.floor(1 * scoreMultiplier);
+            cash += gain;
+            updateHUD();
+          }
+        }
+      } else {
+        // Front wheel fell down safely
+        if (isWheelieActive) {
+          isWheelieActive = false;
+          document.getElementById('wheelie-banner').classList.remove('scale-100', 'wheelie-active');
+          document.getElementById('wheelie-banner').classList.add('scale-0');
+          
+          // Check personal record
+          let finalTime = parseFloat(currentWheelieTime);
+          if (finalTime > personalRecord) {
+            personalRecord = finalTime;
+            document.getElementById('player-personal-record').textContent = finalTime + 's keulinta';
+            // Mega bonus on high record!
+            let recordBonus = Math.floor(finalTime * 8);
+            cash += recordBonus;
+            addChatMessage('Järjestelmä', `🔥 Uusi keulintarekordisi: ${finalTime}s! Sait B$ ${recordBonus} bonuksen!`, 'text-amber-400 font-bold');
+            playBeep(880, 0.4);
+          }
+          currentWheelieTime = 0.0;
+        }
+      }
+
+      // Cop logic (Police Chase randomly spawns or if speed too high)
+      if (!policeActive && Math.random() < 0.002 && rider.actualSpeed > 2) {
+        policeActive = true;
+        policeX = -200;
+        document.getElementById('cop-alert').classList.remove('scale-0');
+        document.getElementById('cop-alert').classList.add('scale-100');
+        addChatMessage('MankiMies_03', 'KYTÄT!!! PAKENE 😂💀', 'text-red-400');
+        scoreMultiplier = 2; // high stakes multiplier
+      }
+
+      if (policeActive) {
+        // Police chases you from the left!
+        policeX += (rider.actualSpeed * 0.92) - (rider.actualSpeed * 0.85) + 0.3;
+        
+        // If police reaches you
+        if (policeX >= rider.x - 50) {
+          // Busted!
+          policeActive = false;
+          document.getElementById('cop-alert').classList.add('scale-0');
+          document.getElementById('cop-alert').classList.remove('scale-100');
+          cash = Math.max(0, cash - 50);
+          addChatMessage('Kytät', '🛡️ Saimme sinut kiinni ylinopeudesta ja laittomasta keulinnasta! B$ 50 sakko.', 'text-red-500 font-black');
+          playBeep(220, 0.6);
+          policeX = -200;
+          scoreMultiplier = 1;
+        }
+
+        // If you speed far away, police gives up
+        if (policeX < -300) {
+          policeActive = false;
+          document.getElementById('cop-alert').classList.add('scale-0');
+          addChatMessage('JonnePro_99', 'Uuu karkasit kyttiä, asiallista 😎', 'text-emerald-400');
+          scoreMultiplier = 1;
+        }
+      }
+
+      // Obstacles update & collision
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        const obs = obstacles[i];
+        obs.x -= rider.actualSpeed; // move towards player
+        
+        // Check Collision with wheels
+        // Rear wheel is at rider.x (offset slightly), front wheel moves with angle
+        const rearWheelX = rider.x - 25;
+        const frontWheelX = rider.x + 25 * Math.cos((rider.angle * Math.PI) / 180);
+        
+        // Collision check
+        if (Math.abs(obs.x - rearWheelX) < obs.width && obs.y >= 235 && rider.angle < 10) {
+          // Hit bump with rear wheel
+          triggerBumpyRide();
+          obstacles.splice(i, 1);
+          continue;
+        }
+
+        if (Math.abs(obs.x - frontWheelX) < obs.width && obs.y >= 235 && rider.angle === 0) {
+          // Hit bump with front wheel
+          triggerBumpyRide();
+          obstacles.splice(i, 1);
+          continue;
+        }
+
+        // Speed camera triggered!
+        if (obs.type === 'speed_camera' && !obs.passed && obs.x < rider.x) {
+          obs.passed = true;
+          if (rider.actualSpeed > 4) {
+            playBeep(1200, 0.05); // Flash sound
+            addChatMessage('Kamera', `📸 SALAMA! Ajoit tolppaan keulien @ ${Math.round(rider.actualSpeed * 15)} km/h!`, 'text-blue-400');
+          }
+        }
+
+        // Clear out-of-screen obstacles
+        if (obs.x < -100) {
+          obstacles.splice(i, 1);
+        }
+      }
+
+      // Randomly spawn obstacles
+      if (Math.random() < 0.015) {
+        spawnObstacle();
+      }
+
+      // Sync HUD
+      updateHUD();
+    }
+
+    function triggerBumpyRide() {
+      rider.angularVelocity += (Math.random() - 0.5) * 1.5; // causes rapid instabilty!
+      rider.vy = -3; // slight upward bounce
+      playBeep(300, 0.2);
+    }
+
+    function handleCrash() {
+      // Loop out - Reset stats, show crash text
+      isWheelieActive = false;
+      currentWheelieTime = 0.0;
+      rider.angle = 0;
+      rider.angularVelocity = 0;
+      rider.actualSpeed = 0;
+      rider.targetSpeed = 0;
+      
+      document.getElementById('wheelie-banner').classList.remove('scale-100', 'wheelie-active');
+      document.getElementById('wheelie-banner').classList.add('scale-0');
+      
+      const crashBox = document.getElementById('crash-box');
+      crashBox.classList.remove('hidden');
+      setTimeout(() => crashBox.classList.add('hidden'), 4000);
+
+      // Deduct some repair Bikelife dollar cost
+      cash = Math.max(0, cash - 15);
+      
+      addChatMessage('JonnePro_99', 'YMPÄRIIII 😂 Varo vähän sitä kaasua!', 'text-amber-500');
+      playBeep(150, 0.5);
+    }
+
+    function updateHUD() {
+      document.getElementById('cash-display').textContent = 'B$ ' + cash;
+      document.getElementById('record-display').textContent = personalRecord + 's';
+    }
+
+    // --- RENDER VISUALS (2D Canvas art style resembling Roblox) ---
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Draw Sky & Clouds
+      ctx.fillStyle = "#1e293b"; // dark evening sky
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Moon
+      ctx.fillStyle = "#e2e8f0";
+      ctx.beginPath();
+      ctx.arc(480, 50, 20, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Parallax Distant Background (Finnish pine trees & apartments)
+      ctx.fillStyle = "#0f172a";
+      for (let i = 0; i < 6; i++) {
+        let x = (i * 120) + (backgroundOffset % 120);
+        // Blocky Roblox-style apartment silhouettes
+        ctx.fillRect(x, 110, 80, 140);
+        ctx.fillStyle = "#1e293b";
+        // Tiny glowing windows
+        ctx.fillRect(x + 15, 130, 10, 10);
+        ctx.fillRect(x + 50, 130, 10, 10);
+        ctx.fillRect(x + 15, 170, 10, 10);
+        ctx.fillRect(x + 50, 170, 10, 10);
+        ctx.fillStyle = "#0f172a";
+      }
+
+      // Pine tree sketches
+      ctx.fillStyle = "#064e3b";
+      for (let i = 0; i < 10; i++) {
+        let x = (i * 80) + (backgroundOffset % 80);
+        ctx.beginPath();
+        ctx.moveTo(x, 250);
+        ctx.lineTo(x - 20, 180);
+        ctx.lineTo(x + 20, 180);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // 3. Draw Road (Ground)
+      ctx.fillStyle = "#334155"; // gray asphalt
+      ctx.fillRect(0, 250, canvas.width, 70);
+
+      // Snow/gravel shoulder elements (authentically Finnish!)
+      ctx.fillStyle = "#e2e8f0"; // white snow patches on edge
+      ctx.fillRect(0, 246, canvas.width, 4);
+
+      // Moving road lines
+      ctx.fillStyle = "#eab308"; // yellow lane dividers
+      for (let i = 0; i < 10; i++) {
+        let x = (i * 80) + (groundOffset % 80);
+        ctx.fillRect(x, 275, 30, 4);
+      }
+
+      // 4. Draw Obstacles
+      obstacles.forEach(obs => {
+        if (obs.type === 'pothole') {
+          ctx.fillStyle = "#1e293b"; // deep dark hole
+          ctx.beginPath();
+          ctx.ellipse(obs.x, obs.y + 4, obs.width / 2, 4, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (obs.type === 'bump') {
+          ctx.fillStyle = "#64748b"; // raised asphalt lump
+          ctx.beginPath();
+          ctx.arc(obs.x, obs.y + 2, 10, Math.PI, 0);
+          ctx.fill();
+        } else if (obs.type === 'traffic_cone') {
+          // Neon orange cone
+          ctx.fillStyle = "#f97316";
+          ctx.beginPath();
+          ctx.moveTo(obs.x, obs.y + 5);
+          ctx.lineTo(obs.x - 8, obs.y - 12);
+          ctx.lineTo(obs.x + 8, obs.y - 12);
+          ctx.closePath();
+          ctx.fill();
+          // Stripe
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(obs.x - 4, obs.y - 6, 8, 3);
+        } else if (obs.type === 'speed_camera') {
+          // Classic grey Finnish box speed camera
+          ctx.fillStyle = "#475569";
+          ctx.fillRect(obs.x - 6, obs.y - 30, 12, 35); // pole
+          ctx.fillStyle = "#1e293b";
+          ctx.fillRect(obs.x - 12, obs.y - 45, 24, 20); // camera box
+          // glass lens circle
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(obs.x, obs.y - 35, 4, 0, Math.PI*2);
+          ctx.fill();
+        }
+      });
+
+      // 5. Draw Police Maija (if active)
+      if (policeActive || policeX > -150) {
+        ctx.save();
+        ctx.translate(policeX, 210);
+
+        // Police van chassis blocky (Roblox theme)
+        ctx.fillStyle = "#1e3a8a"; // Blue stripes
+        ctx.fillRect(0, 0, 80, 40);
+        ctx.fillStyle = "#ffffff"; // White main van
+        ctx.fillRect(0, 5, 75, 30);
+        
+        // Windows
+        ctx.fillStyle = "#0c0f17";
+        ctx.fillRect(50, 10, 20, 12);
+
+        // Wheels
+        ctx.fillStyle = "#0f172a";
+        ctx.beginPath();
+        ctx.arc(20, 40, 12, 0, Math.PI * 2);
+        ctx.arc(60, 40, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        // POLIISI Text decal
+        ctx.fillStyle = "#1e3a8a";
+        ctx.font = "bold 9px 'Lexend Deca'";
+        ctx.fillText("POLIISI", 12, 24);
+
+        // Flashing blue siren
+        if (Math.floor(Date.now() / 150) % 2 === 0) {
+          ctx.fillStyle = "#3b82f6";
+          ctx.beginPath();
+          ctx.arc(40, -5, 8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+
+      // 6. Draw Rider & Moped (Highly custom Roblox block style!)
+      const bike = BIKES[activeBikeKey];
+      ctx.save();
+      // Pivot around rear wheel axle point
+      ctx.translate(rider.x, rider.y);
+      ctx.rotate((-rider.angle * Math.PI) / 180);
+
+      // --- Draw Moped/Bicycle Chassis ---
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = bike.baseColor;
+
+      // Frame main lines
+      ctx.beginPath();
+      ctx.moveTo(-25, 0); // rear axle
+      ctx.lineTo(0, -15); // bottom bracket
+      ctx.lineTo(20, -10); // front fork root
+      ctx.lineTo(25, -25); // handlebar stem
+      ctx.moveTo(0, -15);
+      ctx.lineTo(-10, -30); // seat post
+      ctx.stroke();
+
+      // Rear Wheel
+      ctx.fillStyle = "#1e293b";
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = "#0f172a";
+      ctx.beginPath();
+      ctx.arc(-25, 0, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      // Spoke spinner lines
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#475569";
+      ctx.beginPath();
+      ctx.moveTo(-25, 0);
+      ctx.lineTo(-25 + Math.cos(groundOffset*0.2)*16, Math.sin(groundOffset*0.2)*16);
+      ctx.stroke();
+
+      // Front Wheel
+      ctx.fillStyle = "#1e293b";
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = "#0f172a";
+      ctx.beginPath();
+      ctx.arc(25, 0, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      // Spoke spinner
+      ctx.beginPath();
+      ctx.moveTo(25, 0);
+      ctx.lineTo(25 + Math.cos(groundOffset*0.2)*16, Math.sin(groundOffset*0.2)*16);
+      ctx.stroke();
+
+      // Exhaust pipe upgrade visuals (Tehari)
+      if (bike.type === 'moped') {
+        ctx.strokeStyle = upgrades.exhaust ? "#f43f5e" : "#475569"; // red exhaust if tuned
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(-5, -10);
+        ctx.quadraticCurveTo(-15, -5, -25, -15);
+        ctx.stroke();
+        
+        // Engine block cylinder blocky
+        ctx.fillStyle = "#64748b";
+        ctx.fillRect(-2, -18, 12, 10);
+      }
+
+      // Keulintarauta (Wheelie Bar) upgrade rendering
+      if (upgrades.bar) {
+        ctx.strokeStyle = "#f59e0b"; // bright gold safety metal
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(-10, -30);
+        ctx.lineTo(-42, -5); // extends backward
+        ctx.lineTo(-25, 0);
+        ctx.stroke();
+        // tiny wheel on wheelie bar
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.arc(-42, -5, 3, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      // --- Draw Roblox Jonne Rider Avatar ---
+      ctx.fillStyle = "#ef4444"; // red hoodie
+      ctx.fillRect(-15, -45, 14, 20); // blocky body
+
+      // Arms reaching handlebars
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#ef4444";
+      ctx.beginPath();
+      ctx.moveTo(-8, -40);
+      ctx.lineTo(20, -25); // reaching out
+      ctx.stroke();
+
+      // Blocky Roblox yellow face
+      ctx.fillStyle = "#fbbf24";
+      ctx.fillRect(-12, -60, 10, 12);
+
+      // Cool cap / pipo (beanie)
+      ctx.fillStyle = "#0284c7"; // blue cap
+      ctx.fillRect(-14, -63, 13, 4);
+      ctx.fillStyle = "#0284c7";
+      ctx.fillRect(-6, -61, 8, 2); // cap peak visor
+
+      ctx.restore();
+    }
+
+    // --- GAME CONTROL INTERVAL ---
+    function tick() {
+      updateGame();
+      draw();
+      requestAnimationFrame(tick);
+    }
+
+    // --- CHAT LOGIC (Roblox Simulation) ---
+    const chatLog = document.getElementById('chat-log');
+    
+    const BOT_USERNAMES = [
+      'ES_Jonne_99', 'PärinäEemeli', 'MankiMies_03', 'KytätKarkuun', 'JonnePro_99', 'SuzukiSami', 'PV_Rider', 'MassiKeisari'
+    ];
+    
+    const BOT_PHRASES = [
+      "miks mun mopo ei lähe käyntii??",
+      "kato mun keulintarekordia!!",
+      "heittäkää 2T öljyä nesteellä",
+      "onks tää peli uusin päivitys? 😎",
+      "70cc malossi kiinni ja keulii ku unelma",
+      "mul o 125cc kemmu",
+      "kuka haluu vetää kisat miittiin asti?",
+      "onks kellää heittää viriosia?",
+      "kytät nesteellä!!! paetkaa",
+      "keuli keuli mopojonne!"
+    ];
+
+    function addChatMessage(user, text, textClass = 'text-white') {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'space-y-0.5 leading-snug';
+      
+      let userClass = 'text-sky-400 font-extrabold';
+      if (user === 'Kytät') userClass = 'text-red-500 font-extrabold';
+      if (user === 'System' || user === 'Järjestelmä') userClass = 'text-amber-400 font-extrabold';
+      
+      msgDiv.innerHTML = `
+        <span class="${userClass}">${user}:</span>
+        <span class="${textClass}">${text}</span>
+      `;
+      chatLog.appendChild(msgDiv);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    // Spawn bot chat messages periodically
+    setInterval(() => {
+      if(!gameStarted) return;
+      const randomUser = BOT_USERNAMES[Math.floor(Math.random() * BOT_USERNAMES.length)];
+      const randomPhrase = BOT_PHRASES[Math.floor(Math.random() * BOT_PHRASES.length)];
+      addChatMessage(randomUser, randomPhrase, 'text-slate-300');
+    }, 11000);
+
+    // Form submit for chat
+    document.getElementById('chat-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if(!text) return;
+
+      addChatMessage('Minä (Mopojonne)', text, 'text-emerald-300');
+      input.value = '';
+
+      // Random responsive bot action
+      setTimeout(() => {
+        const bot = BOT_USERNAMES[Math.floor(Math.random() * BOT_USERNAMES.length)];
+        addChatMessage(bot, "joo asiallista! 🤙", "text-slate-300");
+      }, 1500);
+    });
+
+    // --- GARAGE & PURCHASING SYSTEM ---
+    function setupGarageButton(btnId, key) {
+      const btn = document.getElementById(btnId);
+      if(!btn) return;
+      
+      btn.addEventListener('click', () => {
+        const bike = BIKES[key];
+        if (bike.purchased) {
+          selectBike(key);
+        } else {
+          // Attempt purchase
+          if (cash >= bike.price) {
+            cash -= bike.price;
+            bike.purchased = true;
+            selectBike(key);
+            addChatMessage('System', `Ostit kulkupelin: ${bike.name}!`, 'text-emerald-400');
+            playBeep(880, 0.3);
+          } else {
+            addChatMessage('System', `Sinulla ei ole tarpeeksi rahaa kulkupeliin ${bike.name}! Tarvitset B$ ${bike.price}.`, 'text-red-400');
+            playBeep(180, 0.3);
+          }
+        }
+      });
+    }
+
+    setupGarageButton('select-mankeli', 'mankeli');
+    setupGarageButton('select-manki', 'manki');
+    setupGarageButton('select-pv', 'pv');
+    setupGarageButton('select-ktm', 'ktm');
+
+    function selectBike(key) {
+      activeBikeKey = key;
+      
+      // Update Selection borders visually
+      ['mankeli', 'manki', 'pv', 'ktm'].forEach(k => {
+        const el = document.getElementById(`select-${k}`);
+        if(!el) return;
+
+        const priceTag = document.getElementById(`price-${k}`);
+        
+        if (BIKES[k].purchased) {
+          if (priceTag) priceTag.textContent = "Ostettu";
+          if (k === key) {
+            el.className = "w-full text-left p-2.5 rounded-xl border-2 border-emerald-600 bg-emerald-950/20 text-xs flex items-center justify-between transition-all opacity-100";
+          } else {
+            el.className = "w-full text-left p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 text-xs flex items-center justify-between transition-all opacity-90";
+          }
+        } else {
+          el.className = "w-full text-left p-2.5 rounded-xl border border-slate-700 text-xs flex items-center justify-between transition-all opacity-50";
+        }
+      });
+
+      addChatMessage('Järjestelmä', `Otit käyttöön ajoneuvon: ${BIKES[key].name}.`, 'text-emerald-400 font-bold');
+      playBeep(440, 0.15);
+    }
+
+    // Shop Tuning Parts Upgrades
+    setupTuningBtn('buy-exhaust', 'exhaust', 80, 'Tehoputki asennettu! Mopo pärisee kovemmin!');
+    setupTuningBtn('buy-bar', 'bar', 120, 'Keulintarauta asennettu! Ympäri vetäminen on nyt lähes mahdotonta!');
+    setupTuningBtn('buy-engine', 'engine', 200, '70cc pytty kiinni! Nyt mopo kiihtyy uskomattoman kovaa!');
+
+    function setupTuningBtn(btnId, upgradeKey, price, successMsg) {
+      const btn = document.getElementById(btnId);
+      if(!btn) return;
+
+      btn.addEventListener('click', () => {
+        if (upgrades[upgradeKey]) {
+          addChatMessage('System', 'Tämä viritysosa on jo asennettu!', 'text-amber-400');
+          return;
+        }
+
+        if (cash >= price) {
+          cash -= price;
+          upgrades[upgradeKey] = true;
+          btn.textContent = "Asennettu";
+          btn.className = "bg-emerald-800 text-white font-black px-2.5 py-1.5 rounded-lg text-[10px] cursor-default shrink-0";
+          addChatMessage('Virityspaja', successMsg, 'text-emerald-400 font-bold');
+          playBeep(600, 0.3);
+          updateHUD();
+        } else {
+          addChatMessage('Virityspaja', `Rahat ei riitä tähän viritykseen! Tarvitset B$ ${price}.`, 'text-red-400');
+          playBeep(180, 0.3);
+        }
+      });
+    }
+
+    // --- SOUND TOGGLE ---
+    const soundBtn = document.getElementById('sound-toggle');
+    soundBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      if (soundEnabled) {
+        soundBtn.textContent = 'PÄÄLLÄ🔊';
+        soundBtn.className = 'bg-emerald-800 hover:bg-emerald-700 text-white text-[10px] font-black px-2.5 py-1 rounded-md';
+        if (gameStarted) initAudio();
+      } else {
+        soundBtn.textContent = 'MYKISTETTY🔇';
+        soundBtn.className = 'bg-slate-700 hover:bg-slate-600 text-white text-[10px] font-black px-2.5 py-1 rounded-md';
+        if (engineOsc) {
+          try { engineOsc.stop(); } catch(e){}
+          engineOsc = null;
+        }
+      }
+    });
+
+    // --- GAME INITIATION START ---
+    document.getElementById('start-btn').addEventListener('click', () => {
+      document.getElementById('start-overlay').classList.add('opacity-0', 'pointer-events-none');
+      gameStarted = true;
+      initAudio();
+      
+      // Seed initial Roblox messages welcoming the player
+      addChatMessage('JonnePro_99', 'Moro! Liityit juuri servulle. Mennään Nesteen pihaan keuliin!', 'text-slate-300');
+      addChatMessage('System', 'Bikelife Finland - Peli käynnistetty. Ohjaa näppäimillä tai mobiilinapeilla!', 'text-amber-400 font-bold');
+      
+      // Start Loop
+      tick();
+    });
+
+  </script>
+</body>
+</html>
